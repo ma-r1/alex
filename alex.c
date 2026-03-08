@@ -253,7 +253,8 @@ int _automata_numero(TOKEN *token, char c){
 
 TOKEN *siguiente_componente_lexico() {
   TOKEN * token = (TOKEN*)malloc(sizeof(TOKEN));
-  //TODO error malloc
+  if (token == NULL) error_asignacion_memoria();
+  
   int c;
   while (1) {
     c=siguiente_caracter();
