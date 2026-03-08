@@ -42,7 +42,6 @@ int _automata_comentario_linea(){ //no necesita estados porque sólo busca el ca
   while (c != '\n' && c != EOF) {
     c = siguiente_caracter();
   }
-  obtener_lexema();
   return 0;
 }
 
@@ -55,7 +54,7 @@ int _automata_comentario_multilinea(TOKEN*token){
       case 0:
         if (c=='*') estado = 1;
         else if (c == EOF) {
-          obtener_lexema();
+          free(obtener_lexema());
           alex_error_comentario_multilinea(token);
           return -1;
         }
@@ -64,7 +63,7 @@ int _automata_comentario_multilinea(TOKEN*token){
       case 1:
         if (c=='/') estado = 2;
         else if (c == EOF) {
-          obtener_lexema();
+          free(obtener_lexema());
           alex_error_comentario_multilinea(token);
           return -1;
         }
@@ -72,7 +71,7 @@ int _automata_comentario_multilinea(TOKEN*token){
         else estado = 1;
         break;
       case 2:
-        obtener_lexema();
+        free(obtener_lexema());
         return 0;
     }
     c = siguiente_caracter();
@@ -91,7 +90,7 @@ int _automata_comentario_anidado(TOKEN*token){
         if (c == '+') estado = 1;
         else if (c == '/') estado = 2;
         else if (c == EOF) {
-          obtener_lexema();
+          free(obtener_lexema());
           alex_error_comentario_anidado(token, nivel);
           return -1;
         }
@@ -100,13 +99,13 @@ int _automata_comentario_anidado(TOKEN*token){
         if (c == '/') {
           nivel--;
           if (nivel == 0) {
-            obtener_lexema();
-             return 0;
+          free(obtener_lexema());
+            return 0;
           }
           estado = 0;
         }
         else if (c == EOF) {
-          obtener_lexema();
+          free(obtener_lexema());
           alex_error_comentario_anidado(token, nivel);
           return -1;
         }
@@ -119,7 +118,7 @@ int _automata_comentario_anidado(TOKEN*token){
             estado = 0;
         }
         else if (c == EOF) {
-          obtener_lexema();
+          free(obtener_lexema());
           alex_error_comentario_anidado(token, nivel);
           return -1;
         }
@@ -142,7 +141,7 @@ int _automata_string(TOKEN *token){
         if(c=='\\') estado = 1;
         else if(c=='"') estado = 2;
         else if (c == EOF || c == '\n') {
-          obtener_lexema();
+          free(obtener_lexema());
           alex_error_string_sin_cerrar(token);
           return -1;
         }
@@ -150,7 +149,7 @@ int _automata_string(TOKEN *token){
         break;
       case 1:
         if (c == EOF) {
-          obtener_lexema();
+          free(obtener_lexema());
           alex_error_string_eof_escape(token);
           return -1;
         }
@@ -260,7 +259,7 @@ TOKEN *siguiente_componente_lexico() {
     c=siguiente_caracter();
 
     if (c == ' ' || c == '\n' || c == '\t' || c=='\0') {
-      obtener_lexema();
+      free(obtener_lexema());
       continue;
     }
 
@@ -342,11 +341,11 @@ TOKEN *siguiente_componente_lexico() {
       case '[': case ']': case '{': case '}':
       case ',': case '-': case '*': case '<':
         token->comp_lexico = (int)c;
-        token->lexema      = obtener_lexema();
+        token->lexema = obtener_lexema();
         return token;
     }
 
-    obtener_lexema();
+    free(obtener_lexema());
     alex_error_caracter(token, (char)c);
     return token;
   }

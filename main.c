@@ -17,6 +17,8 @@ int main(int argc, char * argv[]) {
   }
   imprimir_componentes_lexicos();
   imprimir_ts();
+  destruir_se();
+  destruir_ts();
   return 0;
 }
 

@@ -18,6 +18,8 @@ char *ini, *del;
 
 FILE * archivo;
 
+char * lexema = NULL;
+
 void _del_masmas(){
   if (del==bloqueA.fin) del=bloqueB.inicio;
   else if (del==bloqueB.fin) del=bloqueA.inicio;
@@ -79,7 +81,6 @@ int inicializar_se(char * ruta){
 
 char * obtener_lexema(){
   int n = 0;
-  char * lexema;
 
   if(_puntero_pertenece_a_bloque(ini, bloqueA) && _puntero_pertenece_a_bloque(del, bloqueB)){
     n = (bloqueA.fin - ini) + (del - bloqueB.inicio);
@@ -110,6 +111,7 @@ char * obtener_lexema(){
 
 void destruir_se() {
   _reiniciar_se();
+  fclose(archivo);
 }
 
 char siguiente_caracter(){
@@ -128,7 +130,7 @@ char siguiente_caracter(){
     if (c == EOF) return EOF;
   }
   _del_masmas();
-  //printf("SE | Enviado caracter %c.\n", c);
+  printf("SE | Enviado caracter %c.\n", c);
   return c;
 }
 

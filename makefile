@@ -1,5 +1,5 @@
 #opciones de compilacion, muestra todos los warnings (-Wall)
-CC=gcc -Wall
+CC=gcc -Wall -g
 #si incluye una librer�a est�ndar, en este caso la matematica (fichero libm.a)
 #todas tienen el formato de fichero libNOMBRE.a
 #y  al incluirla en el compilador se pone -lNOMBRE
