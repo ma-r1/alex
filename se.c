@@ -17,8 +17,8 @@ void _reiniciar_se() {
   del = bufferA;
   memset(bufferA, 0, sizeof(bufferA));
   memset(bufferB, 0, sizeof(bufferB));
-  bufferA[-1] = CENTINELA;
-  bufferB[-1] = CENTINELA;
+  bufferA[TMN_BLOQUE] = CENTINELA;
+  bufferB[TMN_BLOQUE] = CENTINELA;
 }
 
 int inicializar_se(char * ruta){

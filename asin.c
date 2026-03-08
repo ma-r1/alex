@@ -8,6 +8,7 @@ void imprimir_componentes_lexicos() {
     TOKEN *token = siguiente_componente_lexico();
     if (!token) {
       printf("AS | No se ha recibido token.\n");
+      //TODO error
       break;
     }
     if (token->comp_lexico == EOF){

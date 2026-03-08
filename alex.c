@@ -24,7 +24,7 @@ int _automata_alphanum(TOKEN *token, char c) {
         else estado = 1;
         break;
       case 1:
-        devolver_se();
+        if (c!=EOF) devolver_se();
         token->lexema = obtener_lexema();
         token->comp_lexico = buscar_ts(token->lexema);
         if (token->comp_lexico == -1) { //si no se encontró en la TS
@@ -175,14 +175,14 @@ int _automata_binario(TOKEN * token, char c){
       case 0:
         if (c=='b' || c=='B') estado = 1;
         else {
-          devolver_se(); //retroceder el ultimo char
+          if (c!=EOF) devolver_se(); //retroceder el ultimo char
           return -1; //es un número decimal que empieza por 0
         }
         break;
       case 1:
         if (c=='0' || c=='1' || c=='_') estado = 2;
         else  { //no es un número binario bien formado pero de eso se ocupara el asin
-          devolver_se();
+          if (c!=EOF) devolver_se();
           token->lexema = obtener_lexema();
           token->comp_lexico = ENTERO; //en el léxico de D los binarios son enteros
           return 0;
@@ -191,7 +191,7 @@ int _automata_binario(TOKEN * token, char c){
       case 2:
         if (c=='0' || c=='1' || c=='_') estado = 2;
         else {
-          devolver_se();
+          if (c!=EOF) devolver_se();
           token->lexema = obtener_lexema();
           token->comp_lexico = ENTERO; //en el léxico de D los binarios son enteros
           return 0;
@@ -212,7 +212,7 @@ int _automata_numero(TOKEN *token, char c){
         else if(c=='.') estado = 1;
         else if(c=='e' || c=='E') estado = 2;
         else{
-          devolver_se();
+          if (c!=EOF) devolver_se();
           token->lexema = obtener_lexema();
           token->comp_lexico = ENTERO;
           return 0;
@@ -222,7 +222,7 @@ int _automata_numero(TOKEN *token, char c){
         if (isdigit(c) || c=='_') estado = 1;
         else if (c=='e' || c=='E') estado = 2;
         else{
-          devolver_se();
+          if (c!=EOF) devolver_se();
           token->lexema = obtener_lexema();
           token->comp_lexico = DECIMAL;
           return 0;
@@ -231,7 +231,7 @@ int _automata_numero(TOKEN *token, char c){
       case 2:
         if (isdigit(c) || c=='_'  || c=='+' || c=='-') estado = 3;
         else{ //mal formado pero lo aceptamos
-          devolver_se();
+          if (c!=EOF) devolver_se();
           token->lexema = obtener_lexema();
           token->comp_lexico = DECIMAL;
           return 0;
@@ -240,7 +240,7 @@ int _automata_numero(TOKEN *token, char c){
       case 3:
         if (isdigit(c) || c=='_' ) estado = 3;
         else{ //mal formado pero lo aceptamos
-          devolver_se();
+          if (c!=EOF) devolver_se();
           token->lexema = obtener_lexema();
           token->comp_lexico = DECIMAL;
           return 0;
@@ -254,14 +254,14 @@ int _automata_numero(TOKEN *token, char c){
 
 TOKEN *siguiente_componente_lexico() {
   TOKEN * token = (TOKEN*)malloc(sizeof(TOKEN));
-
+  //TODO error malloc
   int c;
   while (1) {
     c=siguiente_caracter();
 
-    if (c == ' ' || c == '\n' || c == '\t') {
-        obtener_lexema();
-        continue;
+    if (c == ' ' || c == '\n' || c == '\t' || c=='\0') {
+      obtener_lexema();
+      continue;
     }
 
     if (c==EOF){
@@ -303,7 +303,7 @@ TOKEN *siguiente_componente_lexico() {
         continue;
       }
       
-      devolver_se();
+      if (c!=EOF) devolver_se();
       token->comp_lexico = (int)'/';
       token->lexema = obtener_lexema();
       return token;
@@ -313,7 +313,7 @@ TOKEN *siguiente_componente_lexico() {
       c=siguiente_caracter();
       if(c=='=') token->comp_lexico = DOBLEIGUAL;
       else {
-        devolver_se();
+        if (c!=EOF) devolver_se();
         token->comp_lexico = (int)'=';
       }
       token->lexema = obtener_lexema();
@@ -325,7 +325,7 @@ TOKEN *siguiente_componente_lexico() {
       if(c=='=') token->comp_lexico = MASIGUAL;
       else if(c=='+') token->comp_lexico = MASMAS;
       else {
-        devolver_se();
+        if (c!=EOF) devolver_se();
         token->comp_lexico = (int)'+';
       }
       token->lexema = obtener_lexema();
