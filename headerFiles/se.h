@@ -1,0 +1,28 @@
+/*
+Desde aquí se accede al fichero regression.d para analizarlo 
+como un flujo de caracteres. El sistema de entrada ha de devolver 
+el siguiente carácter del código fuente cada vez que es invocado, 
+y ha de permitir devolver caracteres al flujo de entrada si es necesario. 
+Podemos, por tanto, considerar para ello el diseño de dos funciones.
+*/
+#ifndef SE_H
+#define SE_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void _reiniciar_se();
+
+int inicializar_se(char * ruta);
+
+char * obtener_lexema();
+
+void destruir_se();
+
+char siguiente_caracter();
+
+void devolver_se();
+
+#endif	// SE_H
+
