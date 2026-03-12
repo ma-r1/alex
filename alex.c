@@ -201,8 +201,8 @@ int _automata_binario(TOKEN * token, char c){
   }
 }
 
-int _automata_numero(TOKEN *token, char c){
-  int estado = 0;
+int _automata_numero(TOKEN *token, char c, int estadoini){
+  int estado = estadoini;
 
   while (1) {
     switch (estado) {
@@ -281,9 +281,21 @@ TOKEN *siguiente_componente_lexico() {
         int res = _automata_binario(token, c);
         if (res == 0) return token;
       }
-      int res = _automata_numero(token, c);
+      int res = _automata_numero(token, c, 0);
       if (res == 0) return token;
       continue;
+    }
+
+    if(c=='.'){
+      c=siguiente_caracter();
+      if (isdigit(c)){
+        int res = _automata_numero(token, c, 1); //empieza en el estado 1 porque ya ha leído el .
+        if (res == 0) return token;
+      }
+      if (c!=EOF) devolver_se();
+      token->comp_lexico = (int)'.';
+      token->lexema = obtener_lexema();
+      return token;
     }
 
     if (c=='/'){
@@ -338,9 +350,9 @@ TOKEN *siguiente_componente_lexico() {
     }
 
     switch (c) {
-      case '.': case ';': case '(': case ')':
-      case '[': case ']': case '{': case '}':
-      case ',': case '-': case '*': case '<':
+      case ';': case '(': case ')': case '[':
+      case ']': case '{': case '}': case ',':
+      case '-': case '*': case '<':
         token->comp_lexico = (int)c;
         token->lexema = obtener_lexema();
         return token;

@@ -38,9 +38,9 @@ int _puntero_pertenece_a_bloque(char * puntero, BLOQUE bloque){
 }
 
 int _cargar_bloque(BLOQUE  *bloque){
-  if(_puntero_pertenece_a_bloque(ini, *bloque) && ini!=del){ //estoy pisando un bloque no analizado si ini está en él pero del no coincide con ini (si coinciden es porque acabamos de reiniciar)
+  if(_puntero_pertenece_a_bloque(ini, *bloque) && ini!=del){ //estoy pisando un bloque no analizado si ini está en él pero del no coincide con del (si coinciden es porque acabamos de reiniciar)
     se_error_lexema_demasiado_grande(ini);
-    ini=del;
+    ini=del; //estoy poniendo ini en un EOF, es lo correcto¿ así mi siguiente lexema pedido va a empezar por EOF
   }
   int leidos = fread(bloque->buffer, sizeof(char), TMN_MAX_LEXEMA, archivo);
   if (leidos==0){
@@ -140,7 +140,3 @@ void devolver_se(){
   _del_menosmenos();
   return;
 }
-
-
-
-
