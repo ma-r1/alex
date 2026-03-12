@@ -91,7 +91,7 @@ int _automata_comentario_anidado(TOKEN*token){
         else if (c == '/') estado = 2;
         else if (c == EOF) {
           free(obtener_lexema());
-          alex_error_comentario_anidado(token, nivel);
+          alex_error_comentario_anidado(token);
           return -1;
         }
         else estado=0;
@@ -107,7 +107,7 @@ int _automata_comentario_anidado(TOKEN*token){
         }
         else if (c == EOF) {
           free(obtener_lexema());
-          alex_error_comentario_anidado(token, nivel);
+          alex_error_comentario_anidado(token);
           return -1;
         }
         else if (c == '+') estado = 1;
@@ -120,7 +120,7 @@ int _automata_comentario_anidado(TOKEN*token){
         }
         else if (c == EOF) {
           free(obtener_lexema());
-          alex_error_comentario_anidado(token, nivel);
+          alex_error_comentario_anidado(token);
           return -1;
         }
         else if (c == '/') estado = 2;

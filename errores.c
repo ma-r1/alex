@@ -3,6 +3,8 @@
 
 #include "errores.h"
 #include "se.h"
+#include "ts.h"
+#include "se.h"
 
 void _alex_eof_token(TOKEN *token) {
   token->comp_lexico = EOF;
@@ -10,45 +12,49 @@ void _alex_eof_token(TOKEN *token) {
 }
 
 void alex_error_comentario_multilinea(TOKEN *token) {
-  fprintf(stderr, "AL | Error léxico: comentario multilínea '/* ... */' sin cerrar.\n");
+  fprintf(stderr, "AL | Línea %d: comentario multilínea sin cerrar.\n", obtener_linea());
   _alex_eof_token(token);
 }
 
-void alex_error_comentario_anidado(TOKEN *token, int nivel) {
-  fprintf(stderr, "AL | Error léxico: comentario anidado '/+ ... +/' sin cerrar (nivel=%d).\n", nivel);
+void alex_error_comentario_anidado(TOKEN *token) {
+  fprintf(stderr, "AL | Línea %d comentario anidado sin cerrar.\n", obtener_linea());
   _alex_eof_token(token);
 }
 
 void alex_error_string_sin_cerrar(TOKEN *token) {
-  fprintf(stderr, "AL | Error léxico: string sin cerrar.\n");
+  fprintf(stderr, "AL | Línea %d: string sin cerrar.\n", obtener_linea());
   _alex_eof_token(token);
 }
 
 void alex_error_string_eof_escape(TOKEN *token) {
-  fprintf(stderr, "AL | Error léxico: EOF tras secuencia de escape en string.\n");
+  fprintf(stderr, "AL | Línea %d: EOF tras secuencia de escape en string.\n", obtener_linea());
   _alex_eof_token(token);
 }
 
 void alex_error_caracter(TOKEN *token, char c) {
-  fprintf(stderr, "AL | Error léxico: carácter no reconocido '%c'.\n", c);
+  fprintf(stderr, "AL | Línea %d: carácter no reconocido '%c'.\n", obtener_linea(), c);
   _alex_eof_token(token);
 }
 
 void se_error_lexema_demasiado_grande(char *ini){
-  fprintf(stderr, "SE | Error sistema de entrada: lexema demasiado largo, número de línea: _ \n");
+  fprintf(stderr, "SE | Línea %d: lexema demasiado largo.\n", obtener_linea());
 }
 
 void se_error_archivo_no_abierto(char * ruta){
   fprintf(stderr, "SE | Error sistema de entrada: no se pudo abrir el archivo '%s'.\n", ruta);
+  destruir_ts();
   exit(1); //es un error grave, cerramos
 }
 
 void se_error_archivo_no_cerrado(){
   fprintf(stderr, "SE | Error sistema de entrada: no se pudo cerrar el archivo.\n");
+  destruir_ts();
   exit(1); //es un error grave, cerramos
 }
 
 void error_asignacion_memoria(){
   fprintf(stderr, "Error general: no se pudo asignar memoria.\n");
+  destruir_ts();
+  destruir_se();
   exit(1); //es un error grave, cerramos
 }

@@ -21,6 +21,8 @@ FILE * archivo;
 
 char * lexema = NULL;
 
+int num_linea = 1;
+
 int error_impreso = 0;
 
 void _del_masmas(){
@@ -38,7 +40,6 @@ void _del_menosmenos(){
 int _puntero_pertenece_a_bloque(char * puntero, BLOQUE bloque){
   return(puntero>=bloque.inicio && puntero<=bloque.fin);
 }
-
 
 int _cargar_bloque(BLOQUE  *bloque){
   if(_puntero_pertenece_a_bloque(ini, *bloque) && ini!=del){ //estoy pisando un bloque no analizado si ini está en él pero del no coincide con del (si coinciden es porque acabamos de reiniciar)
@@ -78,6 +79,9 @@ void _reiniciar_se() {
 
 int inicializar_se(char * ruta){
   _reiniciar_se();
+
+  num_linea=1;
+
   archivo = fopen(ruta, "r");
   if (archivo == NULL) se_error_archivo_no_abierto(ruta);
   _cargar_bloque(&bloqueA);
@@ -88,7 +92,7 @@ int inicializar_se(char * ruta){
 
 char * obtener_lexema(){
   error_impreso = 0;
-  
+
   int n = 0;
 
   if(_puntero_pertenece_a_bloque(ini, bloqueA) && _puntero_pertenece_a_bloque(del, bloqueB)){
@@ -121,7 +125,7 @@ char * obtener_lexema(){
 
 void destruir_se() {
   _reiniciar_se();
-  if (EOF==fclose(archivo)) se_error_archivo_no_cerrado();
+  if (archivo != NULL) { if (EOF==fclose(archivo)) se_error_archivo_no_cerrado(); };
 }
 
 char siguiente_caracter(){
@@ -140,6 +144,8 @@ char siguiente_caracter(){
     if (c == EOF) return EOF;
   }
   _del_masmas();
+
+  if (c=='\n') num_linea++;
   //printf("SE | Enviado caracter %c.\n", c);
   return c;
 }
@@ -147,5 +153,9 @@ char siguiente_caracter(){
 void devolver_se(){
   //printf("SE | Retrocedido caracter.\n");
   _del_menosmenos();
+
+  if (*del=='\n') num_linea--;
   return;
 }
+
+int obtener_linea() { return num_linea; }
