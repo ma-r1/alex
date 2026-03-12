@@ -21,6 +21,8 @@ FILE * archivo;
 
 char * lexema = NULL;
 
+int error_impreso = 0;
+
 void _del_masmas(){
   if (del==bloqueA.fin) del=bloqueB.inicio;
   else if (del==bloqueB.fin) del=bloqueA.inicio;
@@ -37,16 +39,18 @@ int _puntero_pertenece_a_bloque(char * puntero, BLOQUE bloque){
   return(puntero>=bloque.inicio && puntero<=bloque.fin);
 }
 
+
 int _cargar_bloque(BLOQUE  *bloque){
   if(_puntero_pertenece_a_bloque(ini, *bloque) && ini!=del){ //estoy pisando un bloque no analizado si ini está en él pero del no coincide con del (si coinciden es porque acabamos de reiniciar)
-    se_error_lexema_demasiado_grande(ini);
-    ini=del; //estoy poniendo ini en un EOF, es lo correcto¿ así mi siguiente lexema pedido va a empezar por EOF
+    if (!error_impreso) {
+      se_error_lexema_demasiado_grande(ini);
+      error_impreso=1;
+    }
+    del = bloque->inicio;
+    ini = del;
   }
   int leidos = fread(bloque->buffer, sizeof(char), TMN_MAX_LEXEMA, archivo);
-  if (leidos==0){
-    se_error_archivo_no_acceso();
-  }
-  else if (leidos < TMN_MAX_LEXEMA) {
+  if (leidos < TMN_MAX_LEXEMA) {
     bloque->buffer[leidos] = EOF;
   }
   //printf("SE | Cargado bloque %s.\n", bloque->buffer == bloqueA.buffer ? "bloqueA" : "bloqueB");
@@ -55,6 +59,9 @@ int _cargar_bloque(BLOQUE  *bloque){
 
 
 void _reiniciar_se() {
+  memset(bloqueA.buffer, 0, TMN_MAX_LEXEMA);
+  memset(bloqueB.buffer, 0, TMN_MAX_LEXEMA);
+
   bloqueA.buffer[TMN_MAX_LEXEMA] = CENTINELA;
   bloqueB.buffer[TMN_MAX_LEXEMA] = CENTINELA;
 
@@ -80,6 +87,8 @@ int inicializar_se(char * ruta){
 }
 
 char * obtener_lexema(){
+  error_impreso = 0;
+  
   int n = 0;
 
   if(_puntero_pertenece_a_bloque(ini, bloqueA) && _puntero_pertenece_a_bloque(del, bloqueB)){
@@ -112,7 +121,7 @@ char * obtener_lexema(){
 
 void destruir_se() {
   _reiniciar_se();
-  if (EOF==fclose(archivo)) se_error_archivo_no_acceso();
+  if (EOF==fclose(archivo)) se_error_archivo_no_cerrado();
 }
 
 char siguiente_caracter(){

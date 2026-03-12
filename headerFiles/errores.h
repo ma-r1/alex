@@ -11,7 +11,7 @@ void alex_error_caracter(TOKEN *token, char c);
 
 void se_error_lexema_demasiado_grande(char *ini);
 void se_error_archivo_no_abierto(char * ruta);
-void se_error_archivo_no_acceso();
+void se_error_archivo_no_cerrado();
 
 void error_asignacion_memoria();
 

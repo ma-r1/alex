@@ -61,7 +61,10 @@ int _automata_comentario_multilinea(TOKEN*token){
         else estado = 0;
         break;
       case 1:
-        if (c=='/') estado = 2;
+        if (c=='/'){
+          free(obtener_lexema());
+          return 0;
+        }
         else if (c == EOF) {
           free(obtener_lexema());
           alex_error_comentario_multilinea(token);
@@ -70,9 +73,6 @@ int _automata_comentario_multilinea(TOKEN*token){
         else if(c!='*') estado = 0;
         else estado = 1;
         break;
-      case 2:
-        free(obtener_lexema());
-        return 0;
     }
     c = siguiente_caracter();
   }
@@ -94,6 +94,7 @@ int _automata_comentario_anidado(TOKEN*token){
           alex_error_comentario_anidado(token, nivel);
           return -1;
         }
+        else estado=0;
         break;
       case 1:
         if (c == '/') {
@@ -139,7 +140,11 @@ int _automata_string(TOKEN *token){
     switch (estado){
       case 0:
         if(c=='\\') estado = 1;
-        else if(c=='"') estado = 2;
+        else if(c=='"'){
+          token->lexema = obtener_lexema();
+          token->comp_lexico = STRING;
+          return 0; 
+        }
         else if (c == EOF || c == '\n') {
           free(obtener_lexema());
           alex_error_string_sin_cerrar(token);
@@ -155,11 +160,6 @@ int _automata_string(TOKEN *token){
         }
         estado = 0;
         break;
-      case 2:
-        devolver_se();
-        token->lexema = obtener_lexema();
-        token->comp_lexico = STRING;
-        return 0;
     }
   c = siguiente_caracter();
   }

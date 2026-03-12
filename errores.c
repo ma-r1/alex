@@ -35,17 +35,7 @@ void alex_error_caracter(TOKEN *token, char c) {
 }
 
 void se_error_lexema_demasiado_grande(char *ini){
-  char prefijo[TMN_MAX_LEXEMA + 1]; 
-  int i = 0;
-  for (i = 0; i < TMN_MAX_LEXEMA; i++) {
-    if (ini[i] == EOF || ini[i] == '\0') {
-      break; 
-    }
-    prefijo[i] = ini[i];
-  }
-  
-  prefijo[i] = '\0';
-  fprintf(stderr, "SE | Error sistema de entrada: lexema demasiado largo, comienza por '%.*s...'.\n", TMN_MAX_LEXEMA, prefijo);
+  fprintf(stderr, "SE | Error sistema de entrada: lexema demasiado largo, número de línea: _ \n");
 }
 
 void se_error_archivo_no_abierto(char * ruta){
@@ -53,9 +43,9 @@ void se_error_archivo_no_abierto(char * ruta){
   exit(1); //es un error grave, cerramos
 }
 
-void se_error_archivo_no_acceso(){
-  fprintf(stderr, "SE | Error sistema de entrada: no se pudo acceder al archivo abierto.\n");
-  exit(1);
+void se_error_archivo_no_cerrado(){
+  fprintf(stderr, "SE | Error sistema de entrada: no se pudo cerrar el archivo.\n");
+  exit(1); //es un error grave, cerramos
 }
 
 void error_asignacion_memoria(){
