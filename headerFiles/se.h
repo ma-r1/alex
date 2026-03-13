@@ -1,31 +1,43 @@
-/*
-Desde aquí se accede al fichero regression.d para analizarlo 
-como un flujo de caracteres. El sistema de entrada ha de devolver 
-el siguiente carácter del código fuente cada vez que es invocado, 
-y ha de permitir devolver caracteres al flujo de entrada si es necesario. 
-Podemos, por tanto, considerar para ello el diseño de dos funciones.
-*/
 #ifndef SE_H
 #define SE_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#define TMN_MAX_LEXEMA 256
 
-#define TMN_MAX_LEXEMA 5
+/*
+  Inicializa el sistema de entrada inicializando el sistema de doble buffer, abriendo el archivo y cargando el primer bloque.
+  El argumento ruta debe ser un string a la ruta del archivo fuente.
+*/
+void inicializar_se(char * ruta);
 
-void descartar_lexema();
-
-int inicializar_se(char * ruta);
-
-char * obtener_lexema();
-
-void destruir_se();
-
+/*
+  Devuelve el caracter actual apuntado por delantero (EOF si se finalizó el archivo) y avanza dicho puntero.
+*/
 char siguiente_caracter();
 
+/*
+  Retrocede el delantero una posición.
+*/
 void devolver_se();
 
+/*
+  Extrae el lexema contenido entre los punteros inicio y delantero y devuelve un puntero a este lexema.
+*/
+char * obtener_lexema();
+
+/*
+  Iguala el puntero inicio al de delantero para vaciar el lexema leído hasta el momento sin extraerlo.
+  Se usa para ignorar los comentarios, espacios, tabulaciones y saltos de línea.
+*/
+void descartar_lexema();
+
+/*
+  Cierra el archivo fuente.
+*/
+void destruir_se();
+
+/*
+  Función auxiliar para el sistema de errores que devuelve el número de línea que se está analizando.
+*/
 int obtener_linea();
 
 #endif	// SE_H

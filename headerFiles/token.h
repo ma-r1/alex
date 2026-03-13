@@ -1,11 +1,12 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#define TAMANO_MAX_LEXEMA 100
-
+/*
+  Estructura para los tokens que intercambian el analizador lexico y el sintáctico.
+*/
 typedef struct {
-    int comp_lexico;
-    char *lexema;
+    int comp_lexico; //Código numérico correspondiente al componente léxico
+    char *lexema; //Lexema
 } TOKEN;
 
 #endif /* TOKEN_H */
