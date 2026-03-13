@@ -36,7 +36,7 @@ void alex_error_caracter(TOKEN *token, char c) {
   _alex_eof_token(token);
 }
 
-void se_error_lexema_demasiado_grande(char *ini){
+void se_error_lexema_demasiado_grande(char *ini){ //cuando sucede esto el token creado contiene un lexema probablemente incompleto o vacío, pero con el componente léxico que le corresponde para que el analizador sintáctico pueda continuar buscando errores después
   fprintf(stderr, "SE | Línea %d: lexema demasiado largo.\n", obtener_linea());
 }
 

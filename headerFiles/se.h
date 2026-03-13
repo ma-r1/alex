@@ -14,7 +14,7 @@ Podemos, por tanto, considerar para ello el diseño de dos funciones.
 
 #define TMN_MAX_LEXEMA 5
 
-void _reiniciar_se();
+void descartar_lexema();
 
 int inicializar_se(char * ruta);
 

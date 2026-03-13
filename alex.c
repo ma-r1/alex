@@ -40,8 +40,10 @@ int _automata_alphanum(TOKEN *token, char c) {
 int _automata_comentario_linea(){ //no necesita estados porque sólo busca el cambio de línea (o EOF)
   char c = siguiente_caracter();
   while (c != '\n' && c != EOF) {
+    descartar_lexema();
     c = siguiente_caracter();
   }
+  descartar_lexema(); //para eliminar el \n o EOF
   return 0;
 }
 
@@ -50,23 +52,19 @@ int _automata_comentario_multilinea(TOKEN*token){
   char c = siguiente_caracter();
 
   while (1) {
+    descartar_lexema(); 
     switch (estado) {
       case 0:
         if (c=='*') estado = 1;
         else if (c == EOF) {
-          free(obtener_lexema());
           alex_error_comentario_multilinea(token);
           return -1;
         }
         else estado = 0;
         break;
       case 1:
-        if (c=='/'){
-          free(obtener_lexema());
-          return 0;
-        }
+        if (c=='/') return 0;
         else if (c == EOF) {
-          free(obtener_lexema());
           alex_error_comentario_multilinea(token);
           return -1;
         }
@@ -85,12 +83,12 @@ int _automata_comentario_anidado(TOKEN*token){
   char c = siguiente_caracter();
 
   while (1) {
+    descartar_lexema(); 
     switch (estado) {
       case 0:
         if (c == '+') estado = 1;
         else if (c == '/') estado = 2;
         else if (c == EOF) {
-          free(obtener_lexema());
           alex_error_comentario_anidado(token);
           return -1;
         }
@@ -99,14 +97,10 @@ int _automata_comentario_anidado(TOKEN*token){
       case 1:
         if (c == '/') {
           nivel--;
-          if (nivel == 0) {
-          free(obtener_lexema());
-            return 0;
-          }
+          if (nivel == 0) return 0;
           estado = 0;
         }
         else if (c == EOF) {
-          free(obtener_lexema());
           alex_error_comentario_anidado(token);
           return -1;
         }
@@ -119,7 +113,6 @@ int _automata_comentario_anidado(TOKEN*token){
             estado = 0;
         }
         else if (c == EOF) {
-          free(obtener_lexema());
           alex_error_comentario_anidado(token);
           return -1;
         }

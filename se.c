@@ -75,7 +75,10 @@ void _reiniciar_se() {
   del = bloqueA.buffer;
 }
 
-
+void descartar_lexema() { //cuando no queremos obtener un lexema avanzamos el ini y del de uno en uno
+  ini = del;
+  error_impreso = 0;
+}
 
 int inicializar_se(char * ruta){
   _reiniciar_se();
